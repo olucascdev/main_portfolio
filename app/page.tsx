@@ -63,7 +63,7 @@ export default async function Home() {
       <Navbar />
       <main id="main-content" className="relative z-10 mx-auto max-w-[1200px] border-x border-dashed border-foreground/20 bg-background px-8 md:px-16 lg:px-20">
         <Hero heroData={data.hero} />
-        <About paragraphs={data.paragraphs} stats={data.stats} />
+        <About paragraphs={data.paragraphs} stats={data.stats} cvUrl={data.hero?.cvUrl} imageUrl={data.hero?.imageUrl} />
         <Skills skills={data.skills} />
         <Projects projects={data.projects} />
         <Experience experiences={data.experiences} />

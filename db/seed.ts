@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv"
-dotenv.config()
+dotenv.config({ path: ".env.local" })
 
 import { drizzle } from "drizzle-orm/node-postgres"
 import { Pool } from "pg"
@@ -38,6 +38,7 @@ async function seed() {
       "Especializado em PHP, Laravel, Python e Go. Arquiteturas limpas, tipos fortes, e sistemas que outras pessoas conseguem manter.",
     githubUrl: "https://github.com/lucascorreia",
     linkedinUrl: "https://linkedin.com/in/lucascorreia",
+    cvUrl: "/cv.pdf",
   })
 
   // About Paragraphs

@@ -7,7 +7,8 @@ import {
   Briefcase, 
   ArrowRight, 
   Github, 
-  Linkedin 
+  Linkedin,
+  Download
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
@@ -19,6 +20,7 @@ type HeroData = {
   description?: string
   githubUrl?: string
   linkedinUrl?: string
+  cvUrl?: string
 } | null
 
 const codeSnippet = `package main
@@ -99,15 +101,19 @@ export function Hero({ heroData }: { heroData?: HeroData }) {
           </motion.div>
 
           <motion.span variants={itemVariants} className="mb-3 block font-sans text-xs font-bold uppercase tracking-[0.15em] text-foreground/50">
-            {t("hero.subtitle")}
+            {heroData?.subtitle || t("hero.subtitle")}
           </motion.span>
 
           <motion.h1 
             variants={itemVariants} 
             className="mb-4 font-sans text-5xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl"
           >
-            Lucas Correia
+            {heroData?.name || "Lucas Correia"}
           </motion.h1>
+
+          <motion.p variants={itemVariants} className="mb-8 max-w-lg font-serif text-lg leading-relaxed opacity-70">
+            {heroData?.description || t("hero.description")}
+          </motion.p>
 
 
 
@@ -128,6 +134,7 @@ export function Hero({ heroData }: { heroData?: HeroData }) {
               {t("hero.buttons.contact")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
+
           </motion.div>
 
           {/* Links Below */}
@@ -136,13 +143,13 @@ export function Hero({ heroData }: { heroData?: HeroData }) {
               {t("hero.social")}
             </span>
             <div className="flex items-center gap-6">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
+              <a href={heroData?.githubUrl || "https://github.com"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
                 <Github className="h-4 w-4" />
-                @lucascorreia
+                {heroData?.githubUrl?.split('/').pop() || "@lucascorreia"}
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
+              <a href={heroData?.linkedinUrl || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
                 <Linkedin className="h-4 w-4" />
-                Lucas Correia
+                {heroData?.name || "Lucas Correia"}
               </a>
             </div>
           </motion.div>

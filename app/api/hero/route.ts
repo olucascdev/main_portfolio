@@ -18,8 +18,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const { name, title, subtitle, description, githubUrl, linkedinUrl } = await req.json()
-    const data = { name, title, subtitle, description, githubUrl, linkedinUrl }
+    const { name, title, subtitle, description, githubUrl, linkedinUrl, cvUrl, imageUrl } = await req.json()
+    const data = { name, title, subtitle, description, githubUrl, linkedinUrl, cvUrl, imageUrl }
     
     const rows = await db.select().from(hero).limit(1)
 

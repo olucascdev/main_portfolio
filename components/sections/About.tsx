@@ -2,11 +2,12 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { useTranslation } from "react-i18next"
+import { Download } from "lucide-react"
 
 type Paragraph = { id: number; content: string; orderIndex: number }
 type Stat = { id: number; value: string; label: string; orderIndex: number }
 
-export function About({ paragraphs, stats }: { paragraphs?: Paragraph[]; stats?: Stat[] }) {
+export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Paragraph[]; stats?: Stat[]; cvUrl?: string; imageUrl?: string }) {
   const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
 
@@ -36,9 +37,34 @@ export function About({ paragraphs, stats }: { paragraphs?: Paragraph[]; stats?:
             {t("about.title")}
           </motion.h2>
 
-          <motion.p variants={itemVariants} className="max-w-lg font-serif text-lg leading-relaxed opacity-70">
-            {t("about.description")}
-          </motion.p>
+          <div className="space-y-4 mb-8">
+            {paragraphs && paragraphs.length > 0 ? (
+              paragraphs.map((p) => (
+                <motion.p key={p.id} variants={itemVariants} className="max-w-lg font-serif text-lg leading-relaxed opacity-70">
+                  {p.content}
+                </motion.p>
+              ))
+            ) : (
+              <motion.p variants={itemVariants} className="max-w-lg font-serif text-lg leading-relaxed opacity-70">
+                {t("about.description")}
+              </motion.p>
+            )}
+          </div>
+
+          {cvUrl && (
+            <motion.div variants={itemVariants}>
+              <a
+                href={cvUrl}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-foreground/20 bg-foreground/5 px-8 font-sans text-sm font-bold text-foreground transition-all hover:bg-foreground hover:text-background"
+              >
+                <Download className="h-4 w-4" />
+                {t("hero.buttons.cv") || "Baixar CV"}
+              </a>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Right Column — photo only */}
@@ -51,7 +77,7 @@ export function About({ paragraphs, stats }: { paragraphs?: Paragraph[]; stats?:
         >
           <motion.div variants={itemVariants} className="relative z-10 w-full rounded-4xl border border-foreground/10 overflow-hidden aspect-square">
             <img 
-              src="/placeholder-user.jpg" 
+              src={imageUrl || "/placeholder-user.jpg"} 
               alt="Lucas Correia" 
               className="h-full w-full object-cover object-top"
             />

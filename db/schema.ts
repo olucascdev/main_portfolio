@@ -16,6 +16,8 @@ export const hero = pgTable("hero", {
   description: text("description").notNull(),
   githubUrl: text("github_url").notNull().default(""),
   linkedinUrl: text("linkedin_url").notNull().default(""),
+  cvUrl: text("cv_url").notNull().default(""),
+  imageUrl: text("image_url").notNull().default(""),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
 

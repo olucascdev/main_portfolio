@@ -53,9 +53,9 @@ export function Experience({ experiences }: { experiences: Experience[] }) {
             <div className="absolute bottom-0 left-1 top-0 w-px bg-foreground/10" />
 
             <div className="space-y-12">
-              {experiences.map((exp, i) => (
+              {experiences.map((exp) => (
                 <motion.div
-                  key={i}
+                  key={exp.id}
                   variants={itemVariants}
                   className="relative pl-8"
                 >

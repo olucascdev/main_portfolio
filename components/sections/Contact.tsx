@@ -56,7 +56,7 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
           <motion.div variants={itemVariants} className="mt-16">
             {contactLinks.map((link, i) => (
               <a
-                key={link.label}
+                key={link.id}
                 href={link.href}
                 target={link.href.startsWith("mailto") ? undefined : "_blank"}
                 rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}

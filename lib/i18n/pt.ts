@@ -8,7 +8,8 @@ export const pt = {
     description: "Backend Developer especializado em PHP, Laravel, Python e Go. Construindo sistemas robustos, desde soluções escaláveis à modelagem complexa de bancos de dados.",
     buttons: {
       projects: "Ver Projetos",
-      contact: "Entrar em Contato"
+      contact: "Entrar em Contato",
+      cv: "Baixar CV"
     },
     social: "Me encontre no:",
     badge: "Disponível para projetos"

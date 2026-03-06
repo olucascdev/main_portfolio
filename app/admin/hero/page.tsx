@@ -11,6 +11,8 @@ type Hero = {
   description: string
   githubUrl: string
   linkedinUrl: string
+  cvUrl: string
+  imageUrl: string
 }
 
 const defaultHero: Hero = {
@@ -20,6 +22,8 @@ const defaultHero: Hero = {
   description: "",
   githubUrl: "",
   linkedinUrl: "",
+  cvUrl: "",
+  imageUrl: "",
 }
 
 export default function AdminHeroPage() {
@@ -67,6 +71,8 @@ export default function AdminHeroPage() {
         <Field label="Descrição" value={form.description} onChange={(v) => setForm({ ...form, description: v })} textarea />
         <Field label="GitHub URL" value={form.githubUrl} onChange={(v) => setForm({ ...form, githubUrl: v })} />
         <Field label="LinkedIn URL" value={form.linkedinUrl} onChange={(v) => setForm({ ...form, linkedinUrl: v })} />
+        <Field label="CV URL (Link para download)" value={form.cvUrl} onChange={(v) => setForm({ ...form, cvUrl: v })} placeholder="/cv.pdf ou link externo" />
+        <Field label="Sobre Mim - Imagem URL" value={form.imageUrl} onChange={(v) => setForm({ ...form, imageUrl: v })} placeholder="/foto.jpg ou link externo" />
         <div className="flex items-center gap-4 pt-2">
           <SaveButton saving={saving} />
           {saved && <span className="text-green-400 text-sm">Salvo!</span>}

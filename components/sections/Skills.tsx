@@ -50,7 +50,7 @@ export function Skills({ skills }: { skills: Skill[] }) {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {skills.map((skill) => (
               <motion.div
-                key={skill.category}
+                key={skill.id}
                 variants={itemVariants}
                 className="group relative border border-foreground/10 p-6 transition-colors duration-150 hover:border-foreground hover:bg-foreground hover:text-background"
               >
