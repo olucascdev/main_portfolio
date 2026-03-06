@@ -2,9 +2,10 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
-import { contactLinks } from "@/lib/data"
 
-export function Contact() {
+type ContactLink = { id: number; label: string; value: string; href: string; orderIndex: number }
+
+export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
   const prefersReduced = useReducedMotion()
 
   const containerVariants: any = {

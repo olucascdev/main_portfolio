@@ -1,9 +1,10 @@
 "use client"
 
 import { motion, useReducedMotion } from "framer-motion"
-import { experiences } from "@/lib/data"
 
-export function Experience() {
+type Experience = { id: number; period: string; role: string; company: string; description: string; orderIndex: number }
+
+export function Experience({ experiences }: { experiences: Experience[] }) {
   const prefersReduced = useReducedMotion()
 
   const containerVariants: any = {

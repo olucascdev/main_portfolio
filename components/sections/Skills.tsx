@@ -1,9 +1,10 @@
 "use client"
 
 import { motion, useReducedMotion } from "framer-motion"
-import { skills } from "@/lib/data"
 
-export function Skills() {
+type Skill = { id: number; category: string; items: string[]; orderIndex: number }
+
+export function Skills({ skills }: { skills: Skill[] }) {
   const prefersReduced = useReducedMotion()
 
   const containerVariants: any = {

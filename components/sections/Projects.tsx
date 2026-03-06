@@ -2,9 +2,10 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
-import { projects } from "@/lib/data"
 
-export function Projects() {
+type Project = { id: number; title: string; description: string; tech: string[]; githubUrl: string; liveUrl: string; imageUrl?: string | null; orderIndex: number }
+
+export function Projects({ projects }: { projects: Project[] }) {
   const prefersReduced = useReducedMotion()
 
   const containerVariants: any = {
@@ -83,7 +84,7 @@ export function Projects() {
                   {/* Links */}
                   <div className="mt-6 flex gap-6 border-t border-foreground/10 pt-4">
                     <a
-                      href={project.github}
+                      href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
@@ -93,7 +94,7 @@ export function Projects() {
                       <ArrowUpRight className="h-3 w-3" />
                     </a>
                     <a
-                      href={project.live}
+                      href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"

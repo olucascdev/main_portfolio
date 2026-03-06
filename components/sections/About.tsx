@@ -3,7 +3,10 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 
-export function About() {
+type Paragraph = { id: number; content: string; orderIndex: number }
+type Stat = { id: number; value: string; label: string; orderIndex: number }
+
+export function About({ paragraphs, stats }: { paragraphs?: Paragraph[]; stats?: Stat[] }) {
   const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
 

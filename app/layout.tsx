@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Lora } from 'next/font/google'
+import { Inter, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { I18nProvider } from '@/components/i18n-provider'
@@ -10,11 +10,9 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-const lora = Lora({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-lora",
+  variable: "--font-geist",
 })
 
 export const metadata: Metadata = {
@@ -57,8 +55,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${lora.variable}`} suppressHydrationWarning>
-      <body className="font-serif antialiased bg-background text-foreground">
+    <html lang="pt-BR" className={`${inter.variable} ${geist.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

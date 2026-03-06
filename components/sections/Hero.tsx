@@ -11,6 +11,16 @@ import {
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
+type HeroData = {
+  id?: number
+  name?: string
+  title?: string
+  subtitle?: string
+  description?: string
+  githubUrl?: string
+  linkedinUrl?: string
+} | null
+
 const codeSnippet = `package main
 
 import "fmt"
@@ -25,7 +35,7 @@ func main() {
 \tfmt.Printf("Skills: %v\\n", skills)
 }`
 
-export function Hero() {
+export function Hero({ heroData }: { heroData?: HeroData }) {
   const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
   const [displayedCode, setDisplayedCode] = useState("")
