@@ -86,6 +86,14 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
           <p className="relative font-mono text-xs opacity-40">
             Desenvolvido com precisão. © 2025 Lucas Correia.
           </p>
+          <a 
+            href="https://dodgerblue-caribou-294279.hostingersite.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="mt-4 inline-block font-mono text-[10px] uppercase tracking-widest opacity-10 hover:opacity-30 transition-opacity duration-500"
+          >
+            Nunca se esqueça de quem você já foi.
+          </a>
         </div>
       </footer>
     </section>
