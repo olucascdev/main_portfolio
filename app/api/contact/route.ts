@@ -18,8 +18,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const [row] = await db.insert(contactLinks).values(body).returning()
+    const { label, value, href, orderIndex } = await req.json()
+    const [row] = await db.insert(contactLinks).values({ label, value, href, orderIndex }).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to create contact link" }, { status: 500 })
@@ -31,9 +31,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const { id, ...data } = body
-    const [row] = await db.update(contactLinks).set(data).where(eq(contactLinks.id, id)).returning()
+    const { id, label, value, href, orderIndex } = await req.json()
+    const [row] = await db.update(contactLinks).set({ label, value, href, orderIndex }).where(eq(contactLinks.id, id)).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to update contact link" }, { status: 500 })

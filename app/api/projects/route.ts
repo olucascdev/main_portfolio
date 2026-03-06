@@ -18,8 +18,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const [row] = await db.insert(projects).values(body).returning()
+    const { title, description, tech, githubUrl, liveUrl, imageUrl, orderIndex } = await req.json()
+    const [row] = await db.insert(projects).values({ title, description, tech, githubUrl, liveUrl, imageUrl, orderIndex }).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to create project" }, { status: 500 })
@@ -31,9 +31,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const { id, ...data } = body
-    const [row] = await db.update(projects).set(data).where(eq(projects.id, id)).returning()
+    const { id, title, description, tech, githubUrl, liveUrl, imageUrl, orderIndex } = await req.json()
+    const [row] = await db.update(projects).set({ title, description, tech, githubUrl, liveUrl, imageUrl, orderIndex }).where(eq(projects.id, id)).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to update project" }, { status: 500 })

@@ -2,8 +2,11 @@ import { SignJWT, jwtVerify } from "jose"
 import { cookies } from "next/headers"
 
 const SECRET = new TextEncoder().encode(
-  process.env.ADMIN_SECRET_KEY ?? "changeme-fallback-secret"
+  process.env.ADMIN_SECRET_KEY
 )
+if (!process.env.ADMIN_SECRET_KEY) {
+  console.warn("ADMIN_SECRET_KEY is not defined in environment variables!")
+}
 const COOKIE_NAME = "admin_token"
 
 export async function signAdminToken(): Promise<string> {

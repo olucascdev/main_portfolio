@@ -18,8 +18,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const [row] = await db.insert(experiences).values(body).returning()
+    const { period, role, company, description, orderIndex } = await req.json()
+    const [row] = await db.insert(experiences).values({ period, role, company, description, orderIndex }).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to create experience" }, { status: 500 })
@@ -31,9 +31,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const { id, ...data } = body
-    const [row] = await db.update(experiences).set(data).where(eq(experiences.id, id)).returning()
+    const { id, period, role, company, description, orderIndex } = await req.json()
+    const [row] = await db.update(experiences).set({ period, role, company, description, orderIndex }).where(eq(experiences.id, id)).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to update experience" }, { status: 500 })

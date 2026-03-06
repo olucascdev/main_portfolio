@@ -18,8 +18,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const [row] = await db.insert(skills).values(body).returning()
+    const { category, items, orderIndex } = await req.json()
+    const [row] = await db.insert(skills).values({ category, items, orderIndex }).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to create skill" }, { status: 500 })
@@ -31,9 +31,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
-    const { id, ...data } = body
-    const [row] = await db.update(skills).set(data).where(eq(skills.id, id)).returning()
+    const { id, category, items, orderIndex } = await req.json()
+    const [row] = await db.update(skills).set({ category, items, orderIndex }).where(eq(skills.id, id)).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to update skill" }, { status: 500 })

@@ -26,13 +26,15 @@ export async function POST(req: Request) {
   }
   try {
     const body = await req.json()
-    const { type, ...data } = body
+    const { type } = body
 
     if (type === "paragraph") {
-      const [row] = await db.insert(aboutParagraphs).values(data).returning()
+      const { content, orderIndex } = body
+      const [row] = await db.insert(aboutParagraphs).values({ content, orderIndex }).returning()
       return NextResponse.json(row)
     } else if (type === "stat") {
-      const [row] = await db.insert(aboutStats).values(data).returning()
+      const { value, label, orderIndex } = body
+      const [row] = await db.insert(aboutStats).values({ value, label, orderIndex }).returning()
       return NextResponse.json(row)
     }
     return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -47,13 +49,15 @@ export async function PUT(req: Request) {
   }
   try {
     const body = await req.json()
-    const { type, id, ...data } = body
+    const { type, id } = body
 
     if (type === "paragraph") {
-      const [row] = await db.update(aboutParagraphs).set(data).where(eq(aboutParagraphs.id, id)).returning()
+      const { content, orderIndex } = body
+      const [row] = await db.update(aboutParagraphs).set({ content, orderIndex }).where(eq(aboutParagraphs.id, id)).returning()
       return NextResponse.json(row)
     } else if (type === "stat") {
-      const [row] = await db.update(aboutStats).set(data).where(eq(aboutStats.id, id)).returning()
+      const { value, label, orderIndex } = body
+      const [row] = await db.update(aboutStats).set({ value, label, orderIndex }).where(eq(aboutStats.id, id)).returning()
       return NextResponse.json(row)
     }
     return NextResponse.json({ error: "Invalid type" }, { status: 400 })

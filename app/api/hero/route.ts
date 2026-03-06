@@ -18,16 +18,18 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const body = await req.json()
+    const { name, title, subtitle, description, githubUrl, linkedinUrl } = await req.json()
+    const data = { name, title, subtitle, description, githubUrl, linkedinUrl }
+    
     const rows = await db.select().from(hero).limit(1)
 
     if (rows.length === 0) {
-      const [inserted] = await db.insert(hero).values(body).returning()
+      const [inserted] = await db.insert(hero).values(data).returning()
       return NextResponse.json(inserted)
     } else {
       const [updated] = await db
         .update(hero)
-        .set({ ...body, updatedAt: new Date() })
+        .set({ ...data, updatedAt: new Date() })
         .where(eq(hero.id, rows[0].id))
         .returning()
       return NextResponse.json(updated)
