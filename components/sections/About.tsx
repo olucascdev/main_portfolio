@@ -6,22 +6,18 @@ import { aboutParagraphs, stats } from "@/lib/data"
 export function About() {
   const prefersReduced = useReducedMotion()
 
-  const containerVariants = prefersReduced
-    ? {}
-    : {
-        hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } },
-      }
+  const containerVariants: any = {
+    hidden: {},
+    visible: prefersReduced ? {} : { transition: { staggerChildren: 0.1 } },
+  }
 
-  const itemVariants = prefersReduced
-    ? {}
-    : {
-        hidden: { opacity: 0, y: 16 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-      }
+  const itemVariants: any = {
+    hidden: { opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 50 },
+    visible: { opacity: 1, y: 0, transition: prefersReduced ? { duration: 0 } : { duration: 0.8, ease: "easeOut" } },
+  }
 
   return (
-    <section id="sobre" className="relative px-6 pb-32 pt-32">
+    <section id="sobre" className="relative pb-32 pt-32">
       {/* Horizontal divider */}
       <div className="absolute left-6 right-6 top-0 h-px bg-foreground/10" />
 
@@ -86,7 +82,7 @@ export function About() {
 
             {/* Portrait Container */}
             <motion.div variants={itemVariants} className="relative mt-12">
-              <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden border border-foreground/10 grayscale">
+              <div className="relative aspect-4/3 w-full max-w-md overflow-hidden border border-foreground/10 grayscale">
                 {/* Placeholder with initials */}
                 <div className="flex h-full w-full items-center justify-center bg-foreground/5">
                   <span className="font-mono text-6xl opacity-10">LC</span>

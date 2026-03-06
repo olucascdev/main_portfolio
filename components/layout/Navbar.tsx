@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
 const navLinks = [
   { href: "#sobre", label: "Sobre" },
@@ -16,16 +17,16 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const prefersReduced = useReducedMotion()
 
-  const menuVariants = prefersReduced
-    ? {}
+  const menuVariants: any = prefersReduced
+    ? { hidden: {}, visible: {}, exit: {} }
     : {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { duration: 0.3 } },
         exit: { opacity: 0, transition: { duration: 0.2 } },
       }
 
-  const linkVariants = prefersReduced
-    ? {}
+  const linkVariants: any = prefersReduced
+    ? { hidden: {}, visible: {} }
     : {
         hidden: { opacity: 0, y: 16 },
         visible: (i: number) => ({
@@ -59,14 +60,18 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex h-10 w-10 items-center justify-center transition-opacity duration-150 hover:opacity-60 md:hidden"
-            aria-label="Abrir menu de navegação"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="flex h-10 w-10 items-center justify-center transition-opacity duration-150 hover:opacity-60 md:hidden"
+              aria-label="Abrir menu de navegação"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -74,7 +79,7 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[100] flex flex-col bg-background md:hidden"
+            className="fixed inset-0 z-100 flex flex-col bg-background md:hidden"
             initial="hidden"
             animate="visible"
             exit="exit"

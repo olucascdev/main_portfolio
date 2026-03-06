@@ -6,22 +6,18 @@ import { experiences } from "@/lib/data"
 export function Experience() {
   const prefersReduced = useReducedMotion()
 
-  const containerVariants = prefersReduced
-    ? {}
-    : {
-        hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } },
-      }
+  const containerVariants: any = {
+    hidden: {},
+    visible: prefersReduced ? {} : { transition: { staggerChildren: 0.1 } },
+  }
 
-  const itemVariants = prefersReduced
-    ? {}
-    : {
-        hidden: { opacity: 0, y: 12 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-      }
+  const itemVariants: any = {
+    hidden: { opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 50 },
+    visible: { opacity: 1, y: 0, transition: prefersReduced ? { duration: 0 } : { duration: 0.8, ease: "easeOut" } },
+  }
 
   return (
-    <section id="experiencia" className="relative px-6 pb-32 pt-32">
+    <section id="experiencia" className="relative pb-32 pt-32">
       {/* Horizontal divider */}
       <div className="absolute left-6 right-6 top-0 h-px bg-foreground/10" />
 

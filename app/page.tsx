@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="relative z-10">
+      <main id="main-content" className="relative z-10 mx-auto max-w-[1200px] border-x border-dashed border-foreground/20 bg-background px-8 md:px-16 lg:px-20">
         <Hero />
         <About />
         <Skills />

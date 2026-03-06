@@ -7,22 +7,18 @@ import { projects } from "@/lib/data"
 export function Projects() {
   const prefersReduced = useReducedMotion()
 
-  const containerVariants = prefersReduced
-    ? {}
-    : {
-        hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } },
-      }
+  const containerVariants: any = {
+    hidden: {},
+    visible: prefersReduced ? {} : { transition: { staggerChildren: 0.1 } },
+  }
 
-  const itemVariants = prefersReduced
-    ? {}
-    : {
-        hidden: { opacity: 0, y: 16 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-      }
+  const itemVariants: any = {
+    hidden: { opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 50 },
+    visible: { opacity: 1, y: 0, transition: prefersReduced ? { duration: 0 } : { duration: 0.8, ease: "easeOut" } },
+  }
 
   return (
-    <section id="projetos" className="relative px-6 pb-32 pt-32">
+    <section id="projetos" className="relative pb-32 pt-32">
       {/* Horizontal divider */}
       <div className="absolute left-6 right-6 top-0 h-px bg-foreground/10" />
 
@@ -60,7 +56,7 @@ export function Projects() {
               >
                 {/* Image Area */}
                 <div className="relative aspect-video overflow-hidden bg-foreground/5 transition-all duration-300 group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
-                  <div className="absolute inset-0 flex items-center justify-center grayscale transition-all duration-300 group-hover:grayscale-[20%]">
+                  <div className="absolute inset-0 flex items-center justify-center grayscale transition-all duration-300 group-hover:grayscale-20">
                     <span className="font-mono text-4xl opacity-10">{project.title}</span>
                   </div>
                 </div>

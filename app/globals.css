@@ -3,35 +3,58 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Dark theme - architectural precision */
+/* Light theme - professional and serious */
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --foreground-muted: color-mix(in srgb, #ffffff 40%, transparent);
-  --border: color-mix(in srgb, #ffffff 10%, transparent);
-  --card: #0a0a0a;
-  --card-foreground: #ffffff;
-  --popover: #0a0a0a;
-  --popover-foreground: #ffffff;
-  --primary: #ffffff;
-  --primary-foreground: #0a0a0a;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ffffff;
-  --muted: #1a1a1a;
-  --muted-foreground: #888888;
-  --accent: #1a1a1a;
-  --accent-foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --foreground-muted: color-mix(in srgb, #0a0a0a 60%, transparent);
+  --border: #e5e5e5;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #0a0a0a;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f5f5f5;
+  --accent-foreground: #0a0a0a;
   --destructive: #ff4444;
   --destructive-foreground: #ffffff;
-  --input: #1a1a1a;
-  --ring: #ffffff;
+  --input: #e5e5e5;
+  --ring: #0a0a0a;
   --radius: 0;
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --foreground-muted: color-mix(in srgb, #fafafa 60%, transparent);
+  --border: #1a1a1a;
+  --card: #0a0a0a;
+  --card-foreground: #fafafa;
+  --popover: #0a0a0a;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #0a0a0a;
+  --secondary: #171717;
+  --secondary-foreground: #fafafa;
+  --muted: #171717;
+  --muted-foreground: #a3a3a3;
+  --accent: #171717;
+  --accent-foreground: #fafafa;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fafafa;
+  --input: #1a1a1a;
+  --ring: #fafafa;
+}
+
 @theme inline {
-  --font-sans: var(--font-instrument), ui-serif, Georgia, serif;
-  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
-  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), ui-serif, Georgia, serif;
+  --font-mono: var(--font-inter), ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -80,7 +103,4 @@
   }
 }
 
-/* Skip to content link for accessibility */
-.skip-to-content {
-  @apply absolute left-4 top-4 z-[200] -translate-y-full bg-foreground px-4 py-2 font-mono text-xs text-background transition-transform focus:translate-y-0;
-}
+

@@ -1,20 +1,19 @@
 import type { Metadata, Viewport } from 'next'
-import { DM_Mono, Instrument_Serif } from 'next/font/google'
+import { Inter, Lora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { GridLines } from '@/components/layout/GridLines'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
-const dmMono = DM_Mono({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-dm-mono",
+  variable: "--font-inter",
 })
 
-const instrumentSerif = Instrument_Serif({
+const lora = Lora({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-instrument",
+  variable: "--font-lora",
 })
 
 export const metadata: Metadata = {
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0a',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }
@@ -57,13 +56,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${dmMono.variable} ${instrumentSerif.variable}`}>
-      <body className="font-serif antialiased">
-        <a href="#main-content" className="skip-to-content">
-          Pular para o conteúdo
-        </a>
-        <GridLines />
-        {children}
+    <html lang="pt-BR" className={`${inter.variable} ${lora.variable}`} suppressHydrationWarning>
+      <body className="font-serif antialiased bg-background text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>
