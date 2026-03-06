@@ -9,6 +9,7 @@ import {
   Github, 
   Linkedin 
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const codeSnippet = `package main
 
@@ -25,6 +26,7 @@ func main() {
 }`
 
 export function Hero() {
+  const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
   const [displayedCode, setDisplayedCode] = useState("")
 
@@ -78,16 +80,16 @@ export function Hero() {
           <motion.div variants={itemVariants} className="flex flex-wrap gap-3 mb-6">
             <div className="flex items-center gap-1.5 rounded-full border border-foreground/10 bg-muted/30 px-3 py-1 text-xs font-semibold text-foreground/70">
               <MapPin className="h-3 w-3" />
-              <span>Brasil</span>
+              <span>{t("hero.badges.location")}</span>
             </div>
             <div className="flex items-center gap-1.5 rounded-full border border-foreground/10 bg-muted/30 px-3 py-1 text-xs font-semibold text-foreground/70">
               <Briefcase className="h-3 w-3" />
-              <span>Backend Developer</span>
+              <span>{t("hero.badges.role")}</span>
             </div>
           </motion.div>
 
           <motion.span variants={itemVariants} className="mb-3 block font-sans text-xs font-bold uppercase tracking-[0.15em] text-foreground/50">
-            DESENVOLVEDOR & ENGENHEIRO
+            {t("hero.subtitle")}
           </motion.span>
 
           <motion.h1 
@@ -105,7 +107,7 @@ export function Hero() {
               href="#projetos"
               className="group flex h-12 flex-none items-center justify-center gap-2 rounded-xl bg-foreground px-6 font-sans text-sm font-bold text-background transition-transform hover:scale-[1.02]"
             >
-              Ver Projetos
+              {t("hero.buttons.projects")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
             <a
@@ -113,7 +115,7 @@ export function Hero() {
               className="group flex h-12 flex-none items-center justify-center gap-2 rounded-xl border border-border/60 bg-background px-6 font-sans text-sm font-bold text-foreground transition-colors hover:bg-muted/50"
             >
               <span className="font-mono font-medium text-foreground/60 mr-1">&lt; &gt;</span>
-              Entrar em Contato
+              {t("hero.buttons.contact")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
           </motion.div>
@@ -121,7 +123,7 @@ export function Hero() {
           {/* Links Below */}
           <motion.div variants={itemVariants} className="space-y-4">
             <span className="block font-sans text-xs font-semibold text-foreground/50">
-              Me encontre no:
+              {t("hero.social")}
             </span>
             <div className="flex items-center gap-6">
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
