@@ -1,0 +1,88 @@
+"use client"
+
+import { motion, useReducedMotion } from "framer-motion"
+import { experiences } from "@/lib/data"
+
+export function Experience() {
+  const prefersReduced = useReducedMotion()
+
+  const containerVariants = prefersReduced
+    ? {}
+    : {
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.1 } },
+      }
+
+  const itemVariants = prefersReduced
+    ? {}
+    : {
+        hidden: { opacity: 0, y: 12 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+      }
+
+  return (
+    <section id="experiencia" className="relative px-6 pb-32 pt-32">
+      {/* Horizontal divider */}
+      <div className="absolute left-6 right-6 top-0 h-px bg-foreground/10" />
+
+      {/* Decorative horizontal line segment */}
+      <motion.div
+        className="absolute left-[18%] top-16 hidden h-px w-24 bg-foreground/10 lg:block"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6 }}
+      />
+
+      <div className="mx-auto max-w-[680px]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={containerVariants}
+        >
+          <motion.div variants={itemVariants} className="mb-16">
+            <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] opacity-30">
+              05 /
+            </span>
+            <h2 className="mt-2 font-mono text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">
+              Trajetória.
+            </h2>
+          </motion.div>
+
+          {/* Timeline */}
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute bottom-0 left-1 top-0 w-px bg-foreground/10" />
+
+            <div className="space-y-12">
+              {experiences.map((exp, i) => (
+                <motion.div
+                  key={i}
+                  variants={itemVariants}
+                  className="relative pl-8"
+                >
+                  {/* Dot */}
+                  <div className="absolute left-0 top-1.5 h-[6px] w-[6px] rounded-full bg-foreground" />
+
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h3 className="font-mono text-lg font-medium md:text-xl">{exp.role}</h3>
+                    <span className="font-mono text-xs opacity-50">{exp.period}</span>
+                  </div>
+
+                  <span className="mt-1 block font-mono text-[0.65rem] uppercase tracking-widest opacity-40">
+                    {exp.company}
+                  </span>
+
+                  <p className="mt-3 font-serif text-sm leading-relaxed opacity-60">
+                    {exp.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
