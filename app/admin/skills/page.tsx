@@ -9,6 +9,7 @@ export default function AdminSkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState<Partial<Skill> | null>(null)
+  const [itemsText, setItemsText] = useState("")
   const [saving, setSaving] = useState(false)
   const router = useRouter()
 
@@ -31,17 +32,19 @@ export default function AdminSkillsPage() {
     if (!modal) return
     setSaving(true)
     const isEdit = !!modal.id
+    const parsedItems = itemsText.split(",").map((s) => s.trim()).filter(Boolean)
     await authFetch("/api/skills", {
       method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...modal,
-        items: modal.items ?? [],
+        items: parsedItems,
         orderIndex: isEdit ? modal.orderIndex : skills.length,
       }),
     })
     setSaving(false)
     setModal(null)
+    setItemsText("")
     fetchData()
   }
 
@@ -61,7 +64,10 @@ export default function AdminSkillsPage() {
           <p className="text-white/40 text-sm mt-1">Categorias e tecnologias</p>
         </div>
         <button
-          onClick={() => setModal({ category: "", items: [], orderIndex: skills.length })}
+          onClick={() => {
+            setModal({ category: "", items: [], orderIndex: skills.length })
+            setItemsText("")
+          }}
           className="px-4 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors"
         >+ Nova categoria</button>
       </div>
@@ -98,7 +104,10 @@ export default function AdminSkillsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
                       <button
-                        onClick={() => setModal(skill)}
+                        onClick={() => {
+                          setModal(skill)
+                          setItemsText(skill.items.join(", "))
+                        }}
                         className="px-2.5 py-1 text-xs text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-md transition-all"
                       >Editar</button>
                       <button
@@ -137,15 +146,15 @@ export default function AdminSkillsPage() {
                 Tecnologias <span className="normal-case text-white/20">(separadas por vírgula)</span>
               </label>
               <input
-                value={modal.items?.join(", ") ?? ""}
-                onChange={(e) => setModal({ ...modal, items: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
+                value={itemsText}
+                onChange={(e) => setItemsText(e.target.value)}
                 placeholder="Go, PHP, Laravel, Python"
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
               />
               {/* Preview */}
-              {(modal.items?.length ?? 0) > 0 && (
+              {itemsText.split(",").map((s) => s.trim()).filter(Boolean).length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
-                  {modal.items?.map((item) => (
+                  {itemsText.split(",").map((s) => s.trim()).filter(Boolean).map((item) => (
                     <span key={item} className="px-2 py-0.5 text-xs text-white/50 bg-white/5 border border-white/10 rounded-md">
                       {item}
                     </span>
@@ -159,7 +168,7 @@ export default function AdminSkillsPage() {
                 className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50 transition-colors">
                 {saving ? "Salvando..." : "Salvar"}
               </button>
-              <button onClick={() => setModal(null)}
+              <button onClick={() => { setModal(null); setItemsText("") }}
                 className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 Cancelar
               </button>

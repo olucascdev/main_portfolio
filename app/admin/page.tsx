@@ -4,7 +4,7 @@ import Link from "next/link"
 
 const sections = [
   { href: "/admin/hero", label: "Hero", description: "Nome, título, subtítulo, redes sociais" },
-  { href: "/admin/about", label: "Sobre Mim", description: "Parágrafos e estatísticas" },
+  { href: "/admin/about", label: "Sobre Mim", description: "Parágrafos, CV e foto" },
   { href: "/admin/skills", label: "Skills", description: "Categorias e tecnologias" },
   { href: "/admin/projects", label: "Projetos", description: "Portfólio de projetos" },
   { href: "/admin/experiences", label: "Experiência", description: "Histórico profissional" },

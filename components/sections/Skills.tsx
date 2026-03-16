@@ -39,10 +39,7 @@ export function Skills({ skills }: { skills: Skill[] }) {
           variants={containerVariants}
         >
           <motion.div variants={itemVariants} className="mb-16">
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] opacity-30">
-              03 /
-            </span>
-            <h2 className="mt-2 font-mono text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">
+            <h2 className="font-mono text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">
               Stack & Ferramentas
             </h2>
           </motion.div>

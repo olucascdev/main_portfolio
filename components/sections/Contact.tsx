@@ -31,16 +31,9 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
           variants={containerVariants}
           className="text-center"
         >
-          <motion.span
-            variants={itemVariants}
-            className="font-mono text-[0.65rem] uppercase tracking-[0.15em] opacity-30"
-          >
-            06 /
-          </motion.span>
-
           <motion.h2
             variants={itemVariants}
-            className="mt-4 font-mono text-4xl font-medium tracking-tight md:text-5xl lg:text-6xl"
+            className="font-mono text-4xl font-medium tracking-tight md:text-5xl lg:text-6xl"
           >
             Vamos construir algo.
           </motion.h2>
@@ -54,7 +47,7 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
 
           {/* Contact Links */}
           <motion.div variants={itemVariants} className="mt-16">
-            {contactLinks.map((link, i) => (
+            {contactLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.href}
@@ -79,12 +72,8 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
       {/* Footer */}
       <footer className="mx-auto mt-32 max-w-[600px] border-t border-foreground/10 pt-8">
         <div className="relative text-center">
-          {/* Decorative crossing lines */}
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 rotate-45 bg-foreground opacity-10" />
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-foreground opacity-10" />
-
           <p className="relative font-mono text-xs opacity-40">
-            Desenvolvido com precisão. © 2025 Lucas Correia.
+            Desenvolvido por Lucas Correia
           </p>
           <a 
             href="https://dodgerblue-caribou-294279.hostingersite.com/" 
