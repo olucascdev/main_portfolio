@@ -28,6 +28,7 @@ export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState<Partial<Project> | null>(null)
+  const [techText, setTechText] = useState("")
   const [saving, setSaving] = useState(false)
   const router = useRouter()
 
@@ -50,13 +51,15 @@ export default function AdminProjectsPage() {
     if (!modal) return
     setSaving(true)
     const isEdit = !!modal.id
+    const parsedTech = techText.split(",").map((s) => s.trim()).filter(Boolean)
     await authFetch("/api/projects", {
       method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...modal, orderIndex: modal.id ? modal.orderIndex : projects.length }),
+      body: JSON.stringify({ ...modal, tech: parsedTech, orderIndex: modal.id ? modal.orderIndex : projects.length }),
     })
     setSaving(false)
     setModal(null)
+    setTechText("")
     fetchData()
   }
 
@@ -76,7 +79,10 @@ export default function AdminProjectsPage() {
           <p className="text-white/40 text-sm mt-1">Portfólio de projetos</p>
         </div>
         <button
-          onClick={() => setModal({ ...emptyProject })}
+          onClick={() => {
+            setModal({ ...emptyProject })
+            setTechText("")
+          }}
           className="px-4 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors"
         >
           + Novo
@@ -96,7 +102,13 @@ export default function AdminProjectsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-all shrink-0">
-              <button onClick={() => setModal(p)} className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all">Editar</button>
+              <button
+                onClick={() => {
+                  setModal(p)
+                  setTechText(p.tech.join(", "))
+                }}
+                className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all"
+              >Editar</button>
               <button onClick={() => deleteProject(p.id)} className="px-3 py-1.5 text-xs text-red-400/70 hover:text-red-400 bg-red-400/5 hover:bg-red-400/10 rounded-lg transition-all">Deletar</button>
             </div>
           </div>
@@ -114,8 +126,8 @@ export default function AdminProjectsPage() {
               <label className="block text-xs text-white/50 mb-1.5 uppercase tracking-wider">Tech (separado por vírgula)</label>
               <input
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder-white/20 focus:outline-none focus:border-white/30 transition-colors"
-                value={modal.tech?.join(", ") ?? ""}
-                onChange={(e) => setModal({ ...modal, tech: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
+                value={techText}
+                onChange={(e) => setTechText(e.target.value)}
                 placeholder="Next.js, Go, PostgreSQL"
               />
             </div>
@@ -126,7 +138,7 @@ export default function AdminProjectsPage() {
               <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50">
                 {saving ? "Salvando..." : "Salvar"}
               </button>
-              <button onClick={() => setModal(null)} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+              <button onClick={() => { setModal(null); setTechText("") }} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 Cancelar
               </button>
             </div>
