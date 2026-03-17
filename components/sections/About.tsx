@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { useTranslation } from "react-i18next"
 import { Download } from "lucide-react"
+import { getSafeUrl } from "@/lib/safe-url"
 
 type Paragraph = { id: number; content: string; orderIndex: number }
 type Stat = { id: number; value: string; label: string; orderIndex: number }
@@ -10,6 +11,8 @@ type Stat = { id: number; value: string; label: string; orderIndex: number }
 export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Paragraph[]; stats?: Stat[]; cvUrl?: string; imageUrl?: string }) {
   const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
+  const safeCvUrl = getSafeUrl(cvUrl, { allowRelative: true, protocols: ["https:", "http:"] })
+  const safeImageUrl = getSafeUrl(imageUrl, { allowRelative: true, protocols: ["https:", "http:"] }) ?? "/placeholder-user.jpg"
 
   const containerVariants: any = {
     hidden: {},
@@ -51,10 +54,10 @@ export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Par
             )}
           </div>
 
-          {cvUrl && (
+          {safeCvUrl && (
             <motion.div variants={itemVariants}>
               <a
-                href={cvUrl}
+                href={safeCvUrl}
                 download
                 target="_blank"
                 rel="noopener noreferrer"
@@ -77,7 +80,7 @@ export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Par
         >
           <motion.div variants={itemVariants} className="relative z-10 w-full rounded-4xl border border-foreground/10 overflow-hidden aspect-square">
             <img 
-              src={imageUrl || "/placeholder-user.jpg"} 
+              src={safeImageUrl} 
               alt="Lucas Correia" 
               className="h-full w-full object-cover object-top"
             />

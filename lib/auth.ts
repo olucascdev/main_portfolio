@@ -1,25 +1,31 @@
 import { SignJWT, jwtVerify } from "jose"
 import { cookies } from "next/headers"
 
-const SECRET = new TextEncoder().encode(
-  process.env.ADMIN_SECRET_KEY
-)
-if (!process.env.ADMIN_SECRET_KEY) {
-  console.warn("ADMIN_SECRET_KEY is not defined in environment variables!")
-}
 const COOKIE_NAME = "admin_token"
+
+function getAdminSecret(): Uint8Array {
+  const secret = process.env.ADMIN_SECRET_KEY
+  if (!secret) {
+    throw new Error("ADMIN_SECRET_KEY is not configured")
+  }
+  return new TextEncoder().encode(secret)
+}
+
+export function isAdminAuthConfigured(): boolean {
+  return Boolean(process.env.ADMIN_SECRET_KEY && process.env.ADMIN_PASSWORD)
+}
 
 export async function signAdminToken(): Promise<string> {
   return new SignJWT({ role: "admin" })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(SECRET)
+    .sign(getAdminSecret())
 }
 
 export async function verifyAdminToken(token: string): Promise<boolean> {
   try {
-    await jwtVerify(token, SECRET)
+    await jwtVerify(token, getAdminSecret())
     return true
   } catch {
     return false

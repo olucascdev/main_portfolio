@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
+import { getSafeUrl } from "@/lib/safe-url"
 
 type ContactLink = { id: number; label: string; value: string; href: string; orderIndex: number }
 
@@ -47,24 +48,31 @@ export function Contact({ contactLinks }: { contactLinks: ContactLink[] }) {
 
           {/* Contact Links */}
           <motion.div variants={itemVariants} className="mt-16">
-            {contactLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                target={link.href.startsWith("mailto") ? undefined : "_blank"}
-                rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                className="group flex items-center justify-between border-b border-foreground/10 py-5 transition-colors duration-150 hover:bg-foreground hover:text-background"
-                aria-label={`${link.label}: ${link.value}`}
-              >
-                <span className="px-4 font-mono text-xs uppercase tracking-widest opacity-50 transition-opacity duration-150 group-hover:opacity-100">
-                  {link.label}
-                </span>
-                <span className="flex items-center gap-2 px-4 font-mono text-sm">
-                  {link.value}
-                  <ArrowUpRight className="h-4 w-4 opacity-50 transition-opacity duration-150 group-hover:opacity-100" />
-                </span>
-              </a>
-            ))}
+            {contactLinks.map((link) => {
+              const href = getSafeUrl(link.href, { protocols: ["https:", "http:", "mailto:", "tel:"] })
+              if (!href) return null
+
+              const isDirectAction = href.startsWith("mailto:") || href.startsWith("tel:")
+
+              return (
+                <a
+                  key={link.id}
+                  href={href}
+                  target={isDirectAction ? undefined : "_blank"}
+                  rel={isDirectAction ? undefined : "noopener noreferrer"}
+                  className="group flex items-center justify-between border-b border-foreground/10 py-5 transition-colors duration-150 hover:bg-foreground hover:text-background"
+                  aria-label={`${link.label}: ${link.value}`}
+                >
+                  <span className="px-4 font-mono text-xs uppercase tracking-widest opacity-50 transition-opacity duration-150 group-hover:opacity-100">
+                    {link.label}
+                  </span>
+                  <span className="flex items-center gap-2 px-4 font-mono text-sm">
+                    {link.value}
+                    <ArrowUpRight className="h-4 w-4 opacity-50 transition-opacity duration-150 group-hover:opacity-100" />
+                  </span>
+                </a>
+              )
+            })}
           </motion.div>
         </motion.div>
       </div>

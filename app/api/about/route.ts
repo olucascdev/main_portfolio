@@ -2,6 +2,13 @@ import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { aboutParagraphs, aboutStats } from "@/db/schema"
 import { isAdminAuthenticated } from "@/lib/auth"
+import {
+  deleteIdSchema,
+  paragraphPayloadSchema,
+  statPayloadSchema,
+  updateParagraphSchema,
+  updateStatSchema,
+} from "@/lib/api-validation"
 import { eq, asc } from "drizzle-orm"
 
 export async function GET() {
@@ -29,12 +36,20 @@ export async function POST(req: Request) {
     const { type } = body
 
     if (type === "paragraph") {
-      const { content, orderIndex } = body
-      const [row] = await db.insert(aboutParagraphs).values({ content, orderIndex }).returning()
+      const parsed = paragraphPayloadSchema.safeParse(body)
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid paragraph payload", details: parsed.error.flatten() }, { status: 400 })
+      }
+
+      const [row] = await db.insert(aboutParagraphs).values(parsed.data).returning()
       return NextResponse.json(row)
     } else if (type === "stat") {
-      const { value, label, orderIndex } = body
-      const [row] = await db.insert(aboutStats).values({ value, label, orderIndex }).returning()
+      const parsed = statPayloadSchema.safeParse(body)
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid stat payload", details: parsed.error.flatten() }, { status: 400 })
+      }
+
+      const [row] = await db.insert(aboutStats).values(parsed.data).returning()
       return NextResponse.json(row)
     }
     return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -52,12 +67,22 @@ export async function PUT(req: Request) {
     const { type, id } = body
 
     if (type === "paragraph") {
-      const { content, orderIndex } = body
-      const [row] = await db.update(aboutParagraphs).set({ content, orderIndex }).where(eq(aboutParagraphs.id, id)).returning()
+      const parsed = updateParagraphSchema.safeParse(body)
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid paragraph payload", details: parsed.error.flatten() }, { status: 400 })
+      }
+
+      const { id, ...data } = parsed.data
+      const [row] = await db.update(aboutParagraphs).set(data).where(eq(aboutParagraphs.id, id)).returning()
       return NextResponse.json(row)
     } else if (type === "stat") {
-      const { value, label, orderIndex } = body
-      const [row] = await db.update(aboutStats).set({ value, label, orderIndex }).where(eq(aboutStats.id, id)).returning()
+      const parsed = updateStatSchema.safeParse(body)
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid stat payload", details: parsed.error.flatten() }, { status: 400 })
+      }
+
+      const { id, ...data } = parsed.data
+      const [row] = await db.update(aboutStats).set(data).where(eq(aboutStats.id, id)).returning()
       return NextResponse.json(row)
     }
     return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -72,7 +97,12 @@ export async function DELETE(req: Request) {
   }
   try {
     const { searchParams } = new URL(req.url)
-    const id = Number(searchParams.get("id"))
+    const parsed = deleteIdSchema.safeParse(searchParams.get("id"))
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid about id" }, { status: 400 })
+    }
+
+    const id = parsed.data
     const type = searchParams.get("type")
 
     if (type === "paragraph") {

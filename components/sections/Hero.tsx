@@ -11,6 +11,7 @@ import {
   Download
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { getSafeUrl } from "@/lib/safe-url"
 
 type HeroData = {
   id?: number
@@ -41,6 +42,8 @@ export function Hero({ heroData }: { heroData?: HeroData }) {
   const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
   const [displayedCode, setDisplayedCode] = useState("")
+  const githubUrl = getSafeUrl(heroData?.githubUrl, { protocols: ["https:", "http:"] }) ?? "https://github.com"
+  const linkedinUrl = getSafeUrl(heroData?.linkedinUrl, { protocols: ["https:", "http:"] }) ?? "https://linkedin.com"
 
   useEffect(() => {
     if (prefersReduced) {
@@ -143,11 +146,11 @@ export function Hero({ heroData }: { heroData?: HeroData }) {
               {t("hero.social")}
             </span>
             <div className="flex items-center gap-6">
-              <a href={heroData?.githubUrl || "https://github.com"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
                 <Github className="h-4 w-4" />
                 {heroData?.githubUrl?.split('/').pop() || "@lucascorreia"}
               </a>
-              <a href={heroData?.linkedinUrl || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-sans text-xs font-bold text-foreground/80 transition-opacity hover:opacity-70">
                 <Linkedin className="h-4 w-4" />
                 {heroData?.name || "Lucas Correia"}
               </a>

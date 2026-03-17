@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { experiences } from "@/db/schema"
 import { isAdminAuthenticated } from "@/lib/auth"
+import { createExperienceSchema, deleteIdSchema, updateExperienceSchema } from "@/lib/api-validation"
 import { eq, asc } from "drizzle-orm"
 
 export async function GET() {
@@ -18,8 +19,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const { period, role, company, description, orderIndex } = await req.json()
-    const [row] = await db.insert(experiences).values({ period, role, company, description, orderIndex }).returning()
+    const parsed = createExperienceSchema.safeParse(await req.json())
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid experience payload", details: parsed.error.flatten() }, { status: 400 })
+    }
+
+    const [row] = await db.insert(experiences).values(parsed.data).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to create experience" }, { status: 500 })
@@ -31,8 +36,13 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const { id, period, role, company, description, orderIndex } = await req.json()
-    const [row] = await db.update(experiences).set({ period, role, company, description, orderIndex }).where(eq(experiences.id, id)).returning()
+    const parsed = updateExperienceSchema.safeParse(await req.json())
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid experience payload", details: parsed.error.flatten() }, { status: 400 })
+    }
+
+    const { id, ...data } = parsed.data
+    const [row] = await db.update(experiences).set(data).where(eq(experiences.id, id)).returning()
     return NextResponse.json(row)
   } catch {
     return NextResponse.json({ error: "Failed to update experience" }, { status: 500 })
@@ -45,7 +55,12 @@ export async function DELETE(req: Request) {
   }
   try {
     const { searchParams } = new URL(req.url)
-    const id = Number(searchParams.get("id"))
+    const parsed = deleteIdSchema.safeParse(searchParams.get("id"))
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid experience id" }, { status: 400 })
+    }
+
+    const id = parsed.data
     await db.delete(experiences).where(eq(experiences.id, id))
     return NextResponse.json({ success: true })
   } catch {

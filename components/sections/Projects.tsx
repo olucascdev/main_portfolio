@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
+import { getSafeUrl } from "@/lib/safe-url"
 
 type Project = { id: number; title: string; description: string; tech: string[]; githubUrl: string; liveUrl: string; imageUrl?: string | null; orderIndex: number }
 
@@ -47,7 +48,9 @@ export function Projects({ projects }: { projects: Project[] }) {
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {projects.map((project) => {
-              const imageUrl = project.imageUrl?.trim()
+              const imageUrl = getSafeUrl(project.imageUrl, { allowRelative: true, protocols: ["https:", "http:"] })
+              const githubUrl = getSafeUrl(project.githubUrl, { protocols: ["https:", "http:"] })
+              const liveUrl = getSafeUrl(project.liveUrl, { protocols: ["https:", "http:"] })
 
               return (
                 <motion.article
@@ -92,26 +95,30 @@ export function Projects({ projects }: { projects: Project[] }) {
 
                     {/* Links */}
                     <div className="mt-6 flex gap-6 border-t border-foreground/10 pt-4">
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
-                        aria-label={`Ver código fonte de ${project.title} no GitHub`}
-                      >
-                        GitHub
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
-                        aria-label={`Ver projeto ${project.title} ao vivo`}
-                      >
-                        Live
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
+                      {githubUrl && (
+                        <a
+                          href={githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
+                          aria-label={`Ver código fonte de ${project.title} no GitHub`}
+                        >
+                          GitHub
+                          <ArrowUpRight className="h-3 w-3" />
+                        </a>
+                      )}
+                      {liveUrl && (
+                        <a
+                          href={liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
+                          aria-label={`Ver projeto ${project.title} ao vivo`}
+                        >
+                          Live
+                          <ArrowUpRight className="h-3 w-3" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </motion.article>

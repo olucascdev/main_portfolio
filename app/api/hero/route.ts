@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { hero } from "@/db/schema"
 import { isAdminAuthenticated } from "@/lib/auth"
+import { heroPayloadSchema } from "@/lib/api-validation"
 import { eq } from "drizzle-orm"
 
 export async function GET() {
@@ -18,9 +19,12 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const { name, title, subtitle, description, githubUrl, linkedinUrl, cvUrl, imageUrl } = await req.json()
-    const data = { name, title, subtitle, description, githubUrl, linkedinUrl, cvUrl, imageUrl }
-    
+    const parsed = heroPayloadSchema.safeParse(await req.json())
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid hero payload", details: parsed.error.flatten() }, { status: 400 })
+    }
+
+    const data = parsed.data
     const rows = await db.select().from(hero).limit(1)
 
     if (rows.length === 0) {
