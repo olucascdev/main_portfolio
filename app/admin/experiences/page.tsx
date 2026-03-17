@@ -25,6 +25,7 @@ export default function AdminExperiencesPage() {
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState<Partial<Experience> | null>(null)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const fetchData = useCallback(async () => {
@@ -45,14 +46,26 @@ export default function AdminExperiencesPage() {
   async function handleSave() {
     if (!modal) return
     setSaving(true)
+    setError("")
     const isEdit = !!modal.id
-    await authFetch("/api/experiences", {
+    const r = await authFetch("/api/experiences", {
       method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...modal, orderIndex: modal.id ? modal.orderIndex : experiences.length }),
     })
+    if (!r) {
+      setSaving(false)
+      return
+    }
+    if (!r.ok) {
+      const data = await r.json().catch(() => null)
+      setSaving(false)
+      setError(data?.error ?? "Nao foi possivel salvar a experiencia.")
+      return
+    }
     setSaving(false)
     setModal(null)
+    setError("")
     fetchData()
   }
 
@@ -72,7 +85,10 @@ export default function AdminExperiencesPage() {
           <p className="text-white/40 text-sm mt-1">Histórico profissional</p>
         </div>
         <button
-          onClick={() => setModal({ ...emptyExp })}
+          onClick={() => {
+            setModal({ ...emptyExp })
+            setError("")
+          }}
           className="px-4 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors"
         >
           + Nova
@@ -89,7 +105,7 @@ export default function AdminExperiencesPage() {
               <p className="text-xs text-white/40 mt-2 leading-relaxed">{exp.description}</p>
             </div>
             <div className="flex items-center gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-all shrink-0">
-              <button onClick={() => setModal(exp)} className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all">Editar</button>
+              <button onClick={() => { setModal(exp); setError("") }} className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all">Editar</button>
               <button onClick={() => deleteExperience(exp.id)} className="px-3 py-1.5 text-xs text-red-400/70 hover:text-red-400 bg-red-400/5 hover:bg-red-400/10 rounded-lg transition-all">Deletar</button>
             </div>
           </div>
@@ -104,11 +120,12 @@ export default function AdminExperiencesPage() {
             <Field label="Cargo" value={modal.role ?? ""} onChange={(v) => setModal({ ...modal, role: v })} />
             <Field label="Empresa" value={modal.company ?? ""} onChange={(v) => setModal({ ...modal, company: v })} />
             <Field label="Descrição" value={modal.description ?? ""} onChange={(v) => setModal({ ...modal, description: v })} textarea />
+            {error && <p className="text-sm text-red-400">{error}</p>}
             <div className="flex gap-3 pt-2">
               <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50">
                 {saving ? "Salvando..." : "Salvar"}
               </button>
-              <button onClick={() => setModal(null)} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+              <button onClick={() => { setModal(null); setError("") }} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 Cancelar
               </button>
             </div>

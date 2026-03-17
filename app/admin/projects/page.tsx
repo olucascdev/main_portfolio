@@ -30,6 +30,7 @@ export default function AdminProjectsPage() {
   const [modal, setModal] = useState<Partial<Project> | null>(null)
   const [techText, setTechText] = useState("")
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const fetchData = useCallback(async () => {
@@ -50,16 +51,28 @@ export default function AdminProjectsPage() {
   async function handleSave() {
     if (!modal) return
     setSaving(true)
+    setError("")
     const isEdit = !!modal.id
     const parsedTech = techText.split(",").map((s) => s.trim()).filter(Boolean)
-    await authFetch("/api/projects", {
+    const r = await authFetch("/api/projects", {
       method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...modal, tech: parsedTech, orderIndex: modal.id ? modal.orderIndex : projects.length }),
     })
+    if (!r) {
+      setSaving(false)
+      return
+    }
+    if (!r.ok) {
+      const data = await r.json().catch(() => null)
+      setSaving(false)
+      setError(data?.error ?? "Nao foi possivel salvar o projeto.")
+      return
+    }
     setSaving(false)
     setModal(null)
     setTechText("")
+    setError("")
     fetchData()
   }
 
@@ -82,6 +95,7 @@ export default function AdminProjectsPage() {
           onClick={() => {
             setModal({ ...emptyProject })
             setTechText("")
+            setError("")
           }}
           className="px-4 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors"
         >
@@ -106,6 +120,7 @@ export default function AdminProjectsPage() {
                 onClick={() => {
                   setModal(p)
                   setTechText(p.tech.join(", "))
+                  setError("")
                 }}
                 className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all"
               >Editar</button>
@@ -134,11 +149,12 @@ export default function AdminProjectsPage() {
             <Field label="GitHub URL" value={modal.githubUrl ?? ""} onChange={(v) => setModal({ ...modal, githubUrl: v })} />
             <Field label="Live URL" value={modal.liveUrl ?? ""} onChange={(v) => setModal({ ...modal, liveUrl: v })} />
             <Field label="Image URL (opcional)" value={modal.imageUrl ?? ""} onChange={(v) => setModal({ ...modal, imageUrl: v })} />
+            {error && <p className="text-sm text-red-400">{error}</p>}
             <div className="flex gap-3 pt-2">
               <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50">
                 {saving ? "Salvando..." : "Salvar"}
               </button>
-              <button onClick={() => { setModal(null); setTechText("") }} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+              <button onClick={() => { setModal(null); setTechText(""); setError("") }} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 Cancelar
               </button>
             </div>

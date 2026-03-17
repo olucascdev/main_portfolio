@@ -23,6 +23,7 @@ export default function AdminContactPage() {
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState<Partial<ContactLink> | null>(null)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const fetchData = useCallback(async () => {
@@ -43,14 +44,26 @@ export default function AdminContactPage() {
   async function handleSave() {
     if (!modal) return
     setSaving(true)
+    setError("")
     const isEdit = !!modal.id
-    await authFetch("/api/contact", {
+    const r = await authFetch("/api/contact", {
       method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...modal, orderIndex: modal.id ? modal.orderIndex : links.length }),
     })
+    if (!r) {
+      setSaving(false)
+      return
+    }
+    if (!r.ok) {
+      const data = await r.json().catch(() => null)
+      setSaving(false)
+      setError(data?.error ?? "Nao foi possivel salvar o contato.")
+      return
+    }
     setSaving(false)
     setModal(null)
+    setError("")
     fetchData()
   }
 
@@ -70,7 +83,10 @@ export default function AdminContactPage() {
           <p className="text-white/40 text-sm mt-1">Links de contato e redes</p>
         </div>
         <button
-          onClick={() => setModal({ ...emptyLink })}
+          onClick={() => {
+            setModal({ ...emptyLink })
+            setError("")
+          }}
           className="px-4 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors"
         >
           + Novo
@@ -86,7 +102,7 @@ export default function AdminContactPage() {
               <p className="text-xs text-white/30 mt-0.5 truncate">{link.href}</p>
             </div>
             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all shrink-0 ml-4">
-              <button onClick={() => setModal(link)} className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all">Editar</button>
+              <button onClick={() => { setModal(link); setError("") }} className="px-3 py-1.5 text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-all">Editar</button>
               <button onClick={() => deleteLink(link.id)} className="px-3 py-1.5 text-xs text-red-400/70 hover:text-red-400 bg-red-400/5 hover:bg-red-400/10 rounded-lg transition-all">Deletar</button>
             </div>
           </div>
@@ -100,11 +116,12 @@ export default function AdminContactPage() {
             <Field label="Label" value={modal.label ?? ""} onChange={(v) => setModal({ ...modal, label: v })} placeholder="Email, GitHub..." />
             <Field label="Valor exibido" value={modal.value ?? ""} onChange={(v) => setModal({ ...modal, value: v })} placeholder="lucas@email.com" />
             <Field label="URL / href" value={modal.href ?? ""} onChange={(v) => setModal({ ...modal, href: v })} placeholder="mailto:lucas@..." />
+            {error && <p className="text-sm text-red-400">{error}</p>}
             <div className="flex gap-3 pt-2">
               <button onClick={handleSave} disabled={saving} className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50">
                 {saving ? "Salvando..." : "Salvar"}
               </button>
-              <button onClick={() => setModal(null)} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+              <button onClick={() => { setModal(null); setError("") }} className="px-4 py-2.5 text-sm text-white/50 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
                 Cancelar
               </button>
             </div>

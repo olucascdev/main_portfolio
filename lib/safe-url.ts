@@ -4,6 +4,8 @@ type SafeUrlOptions = {
 }
 
 const DEFAULT_PROTOCOLS = ["https:", "http:"]
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PHONE_PATTERN = /^[+\d()[\]\s-]{6,}$/
 
 export function getSafeUrl(
   value: string | null | undefined,
@@ -18,9 +20,27 @@ export function getSafeUrl(
     return trimmed
   }
 
+  const allowedProtocols = options.protocols ?? DEFAULT_PROTOCOLS
+
+  if (!trimmed.includes(":")) {
+    if (allowedProtocols.includes("mailto:") && EMAIL_PATTERN.test(trimmed)) {
+      return `mailto:${trimmed}`
+    }
+
+    if (allowedProtocols.includes("tel:") && PHONE_PATTERN.test(trimmed)) {
+      return `tel:${trimmed}`
+    }
+
+    if (
+      (allowedProtocols.includes("https:") || allowedProtocols.includes("http:")) &&
+      !trimmed.startsWith("//")
+    ) {
+      return getSafeUrl(`https://${trimmed}`, options)
+    }
+  }
+
   try {
     const parsed = new URL(trimmed)
-    const allowedProtocols = options.protocols ?? DEFAULT_PROTOCOLS
     if (!allowedProtocols.includes(parsed.protocol)) {
       return undefined
     }
