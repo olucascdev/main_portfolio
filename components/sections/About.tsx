@@ -1,7 +1,6 @@
 "use client"
 
 import { motion, useReducedMotion } from "framer-motion"
-import { useTranslation } from "react-i18next"
 import { Download } from "lucide-react"
 import { getSafeUrl } from "@/lib/safe-url"
 
@@ -9,7 +8,6 @@ type Paragraph = { id: number; content: string; orderIndex: number }
 type Stat = { id: number; value: string; label: string; orderIndex: number }
 
 export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Paragraph[]; stats?: Stat[]; cvUrl?: string; imageUrl?: string }) {
-  const { t } = useTranslation()
   const prefersReduced = useReducedMotion()
   const safeCvUrl = getSafeUrl(cvUrl, { allowRelative: true, protocols: ["https:", "http:"] })
   const safeImageUrl = getSafeUrl(imageUrl, { allowRelative: true, protocols: ["https:", "http:"] }) ?? "/placeholder-user.jpg"
@@ -37,7 +35,7 @@ export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Par
            className="flex flex-col justify-center"
         >
           <motion.h2 variants={itemVariants} className="mb-6 font-sans text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-            {t("about.title")}
+            Sobre Mim
           </motion.h2>
 
           <div className="space-y-4 mb-8">
@@ -49,7 +47,7 @@ export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Par
               ))
             ) : (
               <motion.p variants={itemVariants} className="max-w-lg font-serif text-lg leading-relaxed opacity-70">
-                {t("about.description")}
+                Backend Developer especializado em PHP, Laravel, Python e Go. Especialista na criacao de servicos back-end eficientes, APIs escalaveis e arquiteturas limpas.
               </motion.p>
             )}
           </div>
@@ -64,7 +62,7 @@ export function About({ paragraphs, stats, cvUrl, imageUrl }: { paragraphs?: Par
                 className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-foreground/20 bg-foreground/5 px-8 font-sans text-sm font-bold text-foreground transition-all hover:bg-foreground hover:text-background"
               >
                 <Download className="h-4 w-4" />
-                {t("hero.buttons.cv") || "Baixar CV"}
+                Baixar CV
               </a>
             </motion.div>
           )}

@@ -4,19 +4,16 @@ import { useState } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
-import { LanguageToggle } from "@/components/ui/LanguageToggle"
-import { useTranslation } from "react-i18next"
 
-const navLinksKeys = [
-  { href: "#sobre", key: "nav.about" },
-  { href: "#skills", key: "nav.skills" },
-  { href: "#projetos", key: "nav.projects" },
-  { href: "#experiencia", key: "nav.experience" },
-  { href: "#contato", key: "nav.contact" },
+const navLinks = [
+  { href: "#sobre", label: "Sobre" },
+  { href: "#skills", label: "Skills" },
+  { href: "#projetos", label: "Projetos" },
+  { href: "#experiencia", label: "Experiencia" },
+  { href: "#contato", label: "Contato" },
 ]
 
 export function Navbar() {
-  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const prefersReduced = useReducedMotion()
 
@@ -52,19 +49,18 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-8 md:flex">
-            {navLinksKeys.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 className="font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
               >
-                {t(link.key)}
+                {link.label}
               </a>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <LanguageToggle />
             <ThemeToggle />
 
             {/* Mobile Menu Button */}
@@ -101,7 +97,7 @@ export function Navbar() {
             </div>
 
             <div className="flex flex-1 flex-col items-center justify-center gap-8">
-              {navLinksKeys.map((link, i) => (
+              {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
@@ -112,7 +108,7 @@ export function Navbar() {
                   initial="hidden"
                   animate="visible"
                 >
-                  {t(link.key)}
+                  {link.label}
                 </motion.a>
               ))}
             </div>

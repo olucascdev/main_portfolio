@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
-import { I18nProvider } from '@/components/i18n-provider'
 import './globals.css'
 
 const inter = Inter({
@@ -51,9 +50,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <I18nProvider>
-            {children}
-          </I18nProvider>
+          {children}
         </ThemeProvider>
         <Analytics />
       </body>
