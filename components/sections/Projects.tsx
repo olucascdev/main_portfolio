@@ -46,64 +46,77 @@ export function Projects({ projects }: { projects: Project[] }) {
           </motion.div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {projects.map((project) => (
-              <motion.article
-                key={project.id}
-                variants={itemVariants}
-                className="group border border-foreground/10"
-              >
-                {/* Image Area */}
-                <div className="relative aspect-video overflow-hidden bg-foreground/5 transition-all duration-300 group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
-                  <div className="absolute inset-0 flex items-center justify-center grayscale transition-all duration-300 group-hover:grayscale-20">
-                    <span className="font-mono text-4xl opacity-10">{project.title}</span>
+            {projects.map((project) => {
+              const imageUrl = project.imageUrl?.trim()
+
+              return (
+                <motion.article
+                  key={project.id}
+                  variants={itemVariants}
+                  className="group border border-foreground/10"
+                >
+                  {/* Image Area */}
+                  <div className="relative aspect-video overflow-hidden bg-foreground/5 transition-all duration-300 group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={`Preview do projeto ${project.title}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center grayscale transition-all duration-300 group-hover:grayscale-20">
+                        <span className="font-mono text-4xl opacity-10">{project.title}</span>
+                      </div>
+                    )}
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="font-mono text-xl font-medium md:text-2xl">{project.title}</h3>
-                  <p className="mt-2 font-serif text-sm leading-relaxed opacity-60">
-                    {project.description}
-                  </p>
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="font-mono text-xl font-medium md:text-2xl">{project.title}</h3>
+                    <p className="mt-2 font-serif text-sm leading-relaxed opacity-60">
+                      {project.description}
+                    </p>
 
-                  {/* Tech Tags */}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="border border-current px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wide"
+                    {/* Tech Tags */}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="border border-current px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wide"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Links */}
+                    <div className="mt-6 flex gap-6 border-t border-foreground/10 pt-4">
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
+                        aria-label={`Ver código fonte de ${project.title} no GitHub`}
                       >
-                        {tech}
-                      </span>
-                    ))}
+                        GitHub
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
+                        aria-label={`Ver projeto ${project.title} ao vivo`}
+                      >
+                        Live
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                    </div>
                   </div>
-
-                  {/* Links */}
-                  <div className="mt-6 flex gap-6 border-t border-foreground/10 pt-4">
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
-                      aria-label={`Ver código fonte de ${project.title} no GitHub`}
-                    >
-                      GitHub
-                      <ArrowUpRight className="h-3 w-3" />
-                    </a>
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 font-mono text-xs uppercase tracking-widest opacity-60 transition-opacity duration-150 hover:opacity-100"
-                      aria-label={`Ver projeto ${project.title} ao vivo`}
-                    >
-                      Live
-                      <ArrowUpRight className="h-3 w-3" />
-                    </a>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
+                </motion.article>
+              )
+            })}
           </div>
         </motion.div>
       </div>
